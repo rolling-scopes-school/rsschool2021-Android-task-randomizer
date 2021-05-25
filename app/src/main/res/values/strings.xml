@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">randomizer</string>
+    <string name="number_too_big_toast">number is too big</string>
 </resources>
