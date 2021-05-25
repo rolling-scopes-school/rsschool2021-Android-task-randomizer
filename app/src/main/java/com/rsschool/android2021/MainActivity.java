@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.OnG
         SecondFragment secondFragment = (SecondFragment) getSupportFragmentManager()
                 .findFragmentByTag(SECOND_FRAGMENT_TAG);
 
-        if ( secondFragment.isAdded() ) {
+        if ( secondFragment != null && secondFragment.isAdded() ) {
             openFirstFragment(secondFragment.getResultOnBack());
         } else {
             super.onBackPressed();
