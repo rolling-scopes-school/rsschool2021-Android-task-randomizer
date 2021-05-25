@@ -37,8 +37,7 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.OnG
 
     private void openSecondFragment(int min, int max) {
         final Fragment secondFragment = SecondFragment.newInstance(min, max);
-        final FragmentTransaction transaction = getSupportFragmentManager()
-                .beginTransaction();
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         transaction.replace(R.id.container, secondFragment, SECOND_FRAGMENT_TAG)
                 .commit();
@@ -46,12 +45,7 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.OnG
 
     @Override
     public void onGenerateClicked(int min, int max) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                openSecondFragment(min, max);
-            }
-        });
+        openSecondFragment(min, max);
     }
 
     @Override
