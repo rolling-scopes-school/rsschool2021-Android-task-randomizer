@@ -47,6 +47,10 @@ class SecondFragment : Fragment() {
         fun onBackButtonClick(result: Int)
     }
 
+    fun getResultOnBack(): Int {
+        return result?.text?.toString()?.toInt() ?: 0
+    }
+
     companion object {
 
         @JvmStatic

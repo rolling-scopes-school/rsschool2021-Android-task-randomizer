@@ -94,16 +94,6 @@ class FirstFragment : Fragment() {
         }
     }
 
-    fun updatePreviousResult(result: Int) {
-        previousResult?.text = "Previous result: $result"
-    }
-
-    override fun onResume() {
-        super.onResume()
-        minNumberEditText?.text?.clear()
-        maxNumberEditText?.text?.clear()
-    }
-
     interface OnGenerateClicked {
         fun onGenerateClicked(min: Int, max: Int)
     }

@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.OnG
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         transaction.replace(R.id.container, firstFragment, FIRST_FRAGMENT_TAG)
-                .addToBackStack(FIRST_FRAGMENT_TAG)
                 .commit();
     }
 
@@ -42,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.OnG
                 .beginTransaction();
 
         transaction.replace(R.id.container, secondFragment, SECOND_FRAGMENT_TAG)
-                .addToBackStack(SECOND_FRAGMENT_TAG)
                 .commit();
     }
 
@@ -58,23 +56,18 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.OnG
 
     @Override
     public void onBackPressed() {
-        Fragment secondFragment = getSupportFragmentManager().findFragmentByTag(SECOND_FRAGMENT_TAG);
+        SecondFragment secondFragment = (SecondFragment) getSupportFragmentManager()
+                .findFragmentByTag(SECOND_FRAGMENT_TAG);
 
         if ( secondFragment.isAdded() ) {
-            getSupportFragmentManager().popBackStack();
+            openFirstFragment(secondFragment.getResultOnBack());
         } else {
             super.onBackPressed();
         }
     }
 
-    //TODO: make replace not backstack or recreate fragments
-
     @Override
     public void onBackButtonClick(int result) {
-        FirstFragment firstFragment = (FirstFragment) getSupportFragmentManager()
-                .findFragmentByTag(FIRST_FRAGMENT_TAG);
-
-        firstFragment.updatePreviousResult(result);
-        getSupportFragmentManager().popBackStack();
+        openFirstFragment(result);
     }
 }
