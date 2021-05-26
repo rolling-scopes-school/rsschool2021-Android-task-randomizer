@@ -2,6 +2,7 @@ package com.rsschool.android2021
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.rsschool.android2021.databinding.FragmentFirstBinding
@@ -21,15 +22,24 @@ class FirstFragment : Fragment(R.layout.fragment_first), FirstFragmentInterface 
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentFirstBinding.bind(view)
 
-        binding.generate.setOnClickListener {
-            val minStr = binding.minValue.text.toString()
-            val maxStr = binding.maxValue.text.toString()
+        with(binding) {
 
-            if (checkIsNotEmpty(minStr, maxStr)) {
-                val min = minStr.toIntOrNull() ?: 0
-                val max = maxStr.toIntOrNull() ?: 0
+            minValue.afterTextChanged {
+                if (it.isNotEmpty()) {
+                    binding.generate.isEnabled = isFormValid()
+                }
+            }
 
-                if (checkIsValid(min, max)) {
+            maxValue.afterTextChanged {
+                if (it.isNotEmpty()) {
+                    binding.generate.isEnabled = isFormValid()
+                }
+            }
+
+            generate.setOnClickListener {
+                if (isFormValid()) {
+                    val min = binding.minValue.text.toString().toIntOrNull() ?: 0
+                    val max = binding.maxValue.text.toString().toIntOrNull() ?: 0
                     mainActivityInterface.moveToSecondFragment(min, max)
                 }
             }
@@ -37,29 +47,44 @@ class FirstFragment : Fragment(R.layout.fragment_first), FirstFragmentInterface 
     }
 
     override fun setPreviousResult(prevResult: Int) {
-        binding.minValue.text.clear()
-        binding.maxValue.text.clear()
-        binding.previousResult.text = resources.getString(R.string.prevResult, prevResult)
+        with(binding) {
+            generate.isEnabled = false
+            minValue.text.clear()
+            maxValue.text.clear()
+            previousResult.text = resources.getString(R.string.prevResult, prevResult)
+        }
     }
 
-    private fun checkIsNotEmpty(minStr: String, maxStr: String): Boolean {
-        var isEmpty = true
+    private fun isFormValid() = validateMinField() && validateMaxField() && checkForm()
 
+    private fun validateMinField(): Boolean {
+        var isMinValid = false
+        val minStr = binding.minValue.text.toString()
         binding.minValue.error = if (minStr.isEmpty()) {
-            isEmpty = false
             "Empty field"
-        } else null
-
-        binding.maxValue.error = if (maxStr.isEmpty()) {
-            isEmpty = false
-            "Empty field"
-        } else null
-
-        return isEmpty
+        } else {
+            isMinValid = true
+            null
+        }
+        return isMinValid
     }
 
-    private fun checkIsValid(min: Int, max: Int): Boolean {
+    private fun validateMaxField(): Boolean {
+        var isMaxValid = false
+        val maxStr = binding.maxValue.text.toString()
+        binding.maxValue.error = if (maxStr.isEmpty()) {
+            "Empty field"
+        } else {
+            isMaxValid = true
+            null
+        }
+        return isMaxValid
+    }
+
+    private fun checkForm(): Boolean {
         var isValid = true
+        val min = binding.minValue.text.toString().toIntOrNull() ?: 0
+        val max = binding.maxValue.text.toString().toIntOrNull() ?: 0
         if (min > max) {
             binding.minValue.error = "Invalid input data: Min > Max!"
             binding.maxValue.error = "Invalid input data: Min > Max!"
@@ -68,6 +93,8 @@ class FirstFragment : Fragment(R.layout.fragment_first), FirstFragmentInterface 
             binding.minValue.error = null
             binding.maxValue.error = null
         }
+
         return isValid
     }
+
 }
