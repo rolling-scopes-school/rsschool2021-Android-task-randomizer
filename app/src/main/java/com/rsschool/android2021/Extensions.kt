@@ -2,7 +2,6 @@ package com.rsschool.android2021
 
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.EditText
 
 fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {

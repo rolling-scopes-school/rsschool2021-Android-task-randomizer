@@ -23,7 +23,6 @@ class FirstFragment : Fragment(R.layout.fragment_first), FirstFragmentInterface 
         binding = FragmentFirstBinding.bind(view)
 
         with(binding) {
-
             minValue.afterTextChanged {
                 if (it.isNotEmpty()) {
                     binding.generate.isEnabled = isFormValid()
@@ -38,8 +37,8 @@ class FirstFragment : Fragment(R.layout.fragment_first), FirstFragmentInterface 
 
             generate.setOnClickListener {
                 if (isFormValid()) {
-                    val min = binding.minValue.text.toString().toIntOrNull() ?: 0
-                    val max = binding.maxValue.text.toString().toIntOrNull() ?: 0
+                    val min = binding.minValue.text.toString().toInt()
+                    val max = binding.maxValue.text.toString().toInt()
                     mainActivityInterface.moveToSecondFragment(min, max)
                 }
             }
@@ -48,7 +47,7 @@ class FirstFragment : Fragment(R.layout.fragment_first), FirstFragmentInterface 
 
     override fun setPreviousResult(prevResult: Int) {
         with(binding) {
-            generate.isEnabled = false
+            binding.generate.isEnabled = false
             minValue.text.clear()
             maxValue.text.clear()
             previousResult.text = resources.getString(R.string.prevResult, prevResult)
@@ -63,9 +62,15 @@ class FirstFragment : Fragment(R.layout.fragment_first), FirstFragmentInterface 
         binding.minValue.error = if (minStr.isEmpty()) {
             "Empty field"
         } else {
-            isMinValid = true
-            null
+            try {
+                minStr.toInt()
+                isMinValid = true
+                null
+            } catch (e: Exception) {
+                "Min must be less than 2 147 483 647"
+            }
         }
+
         return isMinValid
     }
 
@@ -75,16 +80,22 @@ class FirstFragment : Fragment(R.layout.fragment_first), FirstFragmentInterface 
         binding.maxValue.error = if (maxStr.isEmpty()) {
             "Empty field"
         } else {
-            isMaxValid = true
-            null
+            try {
+                maxStr.toInt()
+                isMaxValid = true
+                null
+            } catch (e: Exception) {
+                "Max must be less than 2 147 483 647"
+            }
         }
         return isMaxValid
     }
 
     private fun checkForm(): Boolean {
         var isValid = true
-        val min = binding.minValue.text.toString().toIntOrNull() ?: 0
-        val max = binding.maxValue.text.toString().toIntOrNull() ?: 0
+
+        val min = binding.minValue.text.toString().toInt()
+        val max = binding.maxValue.text.toString().toInt()
         if (min > max) {
             binding.minValue.error = "Invalid input data: Min > Max!"
             binding.maxValue.error = "Invalid input data: Min > Max!"
@@ -93,7 +104,6 @@ class FirstFragment : Fragment(R.layout.fragment_first), FirstFragmentInterface 
             binding.minValue.error = null
             binding.maxValue.error = null
         }
-
         return isValid
     }
 
