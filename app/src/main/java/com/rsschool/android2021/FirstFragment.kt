@@ -1,53 +1,73 @@
 package com.rsschool.android2021
 
+import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.rsschool.android2021.databinding.FragmentFirstBinding
 
-class FirstFragment : Fragment() {
+class FirstFragment : Fragment(R.layout.fragment_first), FirstFragmentInterface {
+    private lateinit var binding: FragmentFirstBinding
+    private lateinit var mainActivityInterface: MainActivityInterface
 
-    private var generateButton: Button? = null
-    private var previousResult: TextView? = null
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_first, container, false)
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is MainActivityInterface) {
+            mainActivityInterface = context
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        previousResult = view.findViewById(R.id.previous_result)
-        generateButton = view.findViewById(R.id.generate)
+        binding = FragmentFirstBinding.bind(view)
 
-        val result = arguments?.getInt(PREVIOUS_RESULT_KEY)
-        previousResult?.text = "Previous result: ${result.toString()}"
+        binding.generate.setOnClickListener {
+            val minStr = binding.minValue.text.toString()
+            val maxStr = binding.maxValue.text.toString()
 
-        // TODO: val min = ...
-        // TODO: val max = ...
+            if (checkIsNotEmpty(minStr, maxStr)) {
+                val min = minStr.toIntOrNull() ?: 0
+                val max = maxStr.toIntOrNull() ?: 0
 
-        generateButton?.setOnClickListener {
-            // TODO: send min and max to the SecondFragment
+                if (checkIsValid(min, max)) {
+                    mainActivityInterface.moveToSecondFragment(min, max)
+                }
+            }
         }
     }
 
-    companion object {
+    override fun setPreviousResult(prevResult: Int) {
+        binding.minValue.text.clear()
+        binding.maxValue.text.clear()
+        binding.previousResult.text = resources.getString(R.string.prevResult, prevResult)
+    }
 
-        @JvmStatic
-        fun newInstance(previousResult: Int): FirstFragment {
-            val fragment = FirstFragment()
-            val args = Bundle()
-            args.putInt(PREVIOUS_RESULT_KEY, previousResult)
-            fragment.arguments = args
-            return fragment
+    private fun checkIsNotEmpty(minStr: String, maxStr: String): Boolean {
+        var isEmpty = true
+
+        binding.minValue.error = if (minStr.isEmpty()) {
+            isEmpty = false
+            "Empty field"
+        } else null
+
+        binding.maxValue.error = if (maxStr.isEmpty()) {
+            isEmpty = false
+            "Empty field"
+        } else null
+
+        return isEmpty
+    }
+
+    private fun checkIsValid(min: Int, max: Int): Boolean {
+        var isValid = true
+        if (min > max) {
+            binding.minValue.error = "Invalid input data: Min > Max!"
+            binding.maxValue.error = "Invalid input data: Min > Max!"
+            isValid = false
+        } else {
+            binding.minValue.error = null
+            binding.maxValue.error = null
         }
-
-        private const val PREVIOUS_RESULT_KEY = "PREVIOUS_RESULT"
+        return isValid
     }
 }

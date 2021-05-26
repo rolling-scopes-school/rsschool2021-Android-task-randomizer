@@ -15,37 +15,39 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Previous result: 4" />
+        tools:text="@string/prevResult" />
 
     <EditText
         android:id="@+id/min_value"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        android:hint="Min"
+        android:hint="@string/min"
         android:inputType="number"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/previous_result" />
+        app:layout_constraintTop_toBottomOf="@id/previous_result"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/max_value"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:hint="Max"
+        android:hint="@string/max"
         android:inputType="number"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/min_value" />
+        app:layout_constraintTop_toBottomOf="@id/min_value"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/generate"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        android:text="Generate"
+        android:text="@string/generate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/max_value" />

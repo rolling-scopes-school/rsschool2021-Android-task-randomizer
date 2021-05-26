@@ -5,25 +5,43 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityInterface {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        openFirstFragment(0);
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, new FirstFragment())
+                    .setReorderingAllowed(true)
+                    .commit();
+        }
     }
 
-    private void openFirstFragment(int previousNumber) {
-        final Fragment firstFragment = FirstFragment.newInstance(previousNumber);
-        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, firstFragment);
-        // TODO: invoke function which apply changes of the transaction
+    @Override
+    public void moveToSecondFragment(int min, int max) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, SecondFragment.newInstance(min, max))
+                .addToBackStack(null)
+                .setReorderingAllowed(true)
+                .commit();
     }
 
-    private void openSecondFragment(int min, int max) {
-        // TODO: implement it
+    @Override
+    public void popBackstack() {
+        getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void setPreviousResult(int prevResult) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
+        if (fragment instanceof FirstFragmentInterface) {
+            FirstFragmentInterface firstFragmentInterface = (FirstFragmentInterface) fragment;
+            firstFragmentInterface.setPreviousResult(prevResult);
+        }
     }
 }
+
