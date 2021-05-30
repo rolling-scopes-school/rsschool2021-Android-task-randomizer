@@ -1,5 +1,6 @@
 package com.rsschool.android2021
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,12 +8,21 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import kotlin.random.Random
 
 class SecondFragment : Fragment() {
 
+    private var listener: ActionPerformedListener? = null
     private var backButton: Button? = null
     private var result: TextView? = null
 
+    // Добавляем слушатель через контекст
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        listener = context as ActionPerformedListener
+    }
+
+    // Создаем фрагмент, переопределив метод и используя inflater.inflate
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -21,6 +31,7 @@ class SecondFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_second, container, false)
     }
 
+    // Создаем содержимое фрагмента
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         result = view.findViewById(R.id.result)
@@ -29,18 +40,22 @@ class SecondFragment : Fragment() {
         val min = arguments?.getInt(MIN_VALUE_KEY) ?: 0
         val max = arguments?.getInt(MAX_VALUE_KEY) ?: 0
 
-        result?.text = generate(min, max).toString()
+        val resultRandom = generate(min, max)
+        result?.text = resultRandom.toString()
 
         backButton?.setOnClickListener {
-            // TODO: implement back
+            // Вызываем первый фрагмент, используя метод, который принадлежит объекту MainActivity
+            listener?.onActionPerformedOne(resultRandom)
+
         }
     }
 
     private fun generate(min: Int, max: Int): Int {
-        // TODO: generate random number
-        return 0
+        // Для генерации случайного числа, перем готовый метод из библиотеки
+        return Random.nextInt(from = min, until = max)
     }
 
+    // Передаем данные в новый фрагмент, который создаст MainActivity
     companion object {
 
         @JvmStatic
@@ -48,7 +63,10 @@ class SecondFragment : Fragment() {
             val fragment = SecondFragment()
             val args = Bundle()
 
-            // TODO: implement adding arguments
+            // Полученные значения связываем парой <ключ, значение> и кладем в объект хранения
+            args.putInt(MIN_VALUE_KEY, min)
+            args.putInt(MAX_VALUE_KEY, max)
+            fragment.arguments = args
 
             return fragment
         }
