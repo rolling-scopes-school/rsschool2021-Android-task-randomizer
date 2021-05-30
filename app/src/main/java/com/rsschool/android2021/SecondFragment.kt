@@ -44,14 +44,14 @@ class SecondFragment : Fragment() {
         result?.text = resultRandom.toString()
 
         backButton?.setOnClickListener {
-            // TODO: implement back
+            // Вызываем первый фрагмент, используя метод, который принадлежит объекту MainActivity
             listener?.onActionPerformedOne(resultRandom)
 
         }
     }
 
     private fun generate(min: Int, max: Int): Int {
-        // TODO: generate random number
+        // Для генерации случайного числа, перем готовый метод из библиотеки
         return Random.nextInt(from = min, until = max)
     }
 
@@ -63,7 +63,7 @@ class SecondFragment : Fragment() {
             val fragment = SecondFragment()
             val args = Bundle()
 
-            // TODO: implement adding arguments
+            // Полученные значения связываем парой <ключ, значение> и кладем в объект хранения
             args.putInt(MIN_VALUE_KEY, min)
             args.putInt(MAX_VALUE_KEY, max)
             fragment.arguments = args

@@ -47,7 +47,7 @@ class FirstFragment : Fragment() {
         val result = arguments?.getInt(PREVIOUS_RESULT_KEY)
         previousResult?.text = "Previous result: ${result.toString()}"
 
-        // Переносим инициализацию min и max под нажатие кнопки
+        // Переносим инициализацию min и max по нажатию кнопки под generateButton?.setOnClickListener
 
         generateButton?.setOnClickListener {
 
@@ -55,8 +55,9 @@ class FirstFragment : Fragment() {
             else
                 if (maxValue?.text?.isEmpty() == true)  maxValue!!.error = "Введите максимальное значение."
                 else
-                // TODO: val min = ...
-                // TODO: val max = ...
+                // Так как в условии явно не указано максимальное значение положительного целого числа,
+                // А смысл подгонки верхнего значения из String в Integer через Long логически не обоснован,
+                // Принял архитектурное решение, что верхнее ограничение будет 999 999 999 для простоты кода.
                     if ( minValue?.text.toString().length > 9 ) minValue!!.error = "Значение должно быть меньше 999 999 999."
                     else
                         if ( maxValue?.text.toString().length > 9 ) maxValue!!.error = "Значение должно быть меньше 1 000 000 000."
@@ -67,7 +68,7 @@ class FirstFragment : Fragment() {
                                         minValue!!.error = "Я должен быть меньше своего брата."
                                         maxValue!!.error = "Я должен быть больше своего брата."
                                     }
-                                    else listener?.onActionPerformedTwo(min as Int, max as Int) // TODO: send min and max to the SecondFragment
+                                    else listener?.onActionPerformedTwo(min as Int, max as Int)
                         }
         }
     }

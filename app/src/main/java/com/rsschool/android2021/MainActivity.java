@@ -22,12 +22,11 @@ public class MainActivity extends AppCompatActivity implements ActionPerformedLi
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, firstFragment);
         transaction.commit();
-
-        // TODO: invoke function which apply changes of the transaction
+        // Здесь нехватало лишь добавить коммит
     }
 
     private void openSecondFragment(int min, int max) {
-        // TODO: implement it
+        // Здесь добавил FragmentTransaction, добавил в него второй врагмент и закоммитил
         final Fragment secondFragment = SecondFragment.newInstance(min, max);
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, secondFragment);
