@@ -17,8 +17,9 @@ class FirstFragment : Fragment() {
     private var previousResult: TextView? = null
     private var minValue: EditText? = null
     private var maxValue: EditText? = null
-    private var min: Int? = null
-    private var max: Int? = null
+    private var min: Int = 0
+    private var max: Int = 0
+    private var yesOrNo: Boolean = false
 
     // Добавляем слушатель через контекст
     override fun onAttach(context: Context) {
@@ -46,24 +47,28 @@ class FirstFragment : Fragment() {
         val result = arguments?.getInt(PREVIOUS_RESULT_KEY)
         previousResult?.text = "Previous result: ${result.toString()}"
 
+        // Переносим инициализацию min и max под нажатие кнопки
+
         generateButton?.setOnClickListener {
 
-            // TODO: val min = ...
-            min = minValue?.text.toString().toInt()
-            // TODO: val max = ...
-            max = maxValue?.text.toString().toInt()
-
-//            if(minValue?.text?.isEmpty() as Boolean) {
-//                minValue!!.error = "Введите минимальное значение."
-//            } else
-//            if(maxValue?.text?.isEmpty() as Boolean) {
-//                previousResult?.text = "Введите максимальное значение."
-//            } else
-//                if (max!! < min!!) {}
-            // previousResult?.text = "min $min and max $max"
-            // TODO: send min and max to the SecondFragment
-            listener?.onActionPerformedTwo(min as Int, max as Int)
-
+            if (minValue?.text?.isEmpty() == true)  minValue!!.error = "Введите минимальное значение."
+            else
+                if (maxValue?.text?.isEmpty() == true)  maxValue!!.error = "Введите максимальное значение."
+                else
+                // TODO: val min = ...
+                // TODO: val max = ...
+                    if ( minValue?.text.toString().length > 9 ) minValue!!.error = "Значение должно быть меньше 999 999 999."
+                    else
+                        if ( maxValue?.text.toString().length > 9 ) maxValue!!.error = "Значение должно быть меньше 1 000 000 000."
+                        else {
+                            min = minValue?.text.toString().toInt()
+                            max = maxValue?.text.toString().toInt()
+                                    if ( (max) <= (min) ) {
+                                        minValue!!.error = "Я должен быть меньше своего брата."
+                                        maxValue!!.error = "Я должен быть больше своего брата."
+                                    }
+                                    else listener?.onActionPerformedTwo(min as Int, max as Int) // TODO: send min and max to the SecondFragment
+                        }
         }
     }
 
