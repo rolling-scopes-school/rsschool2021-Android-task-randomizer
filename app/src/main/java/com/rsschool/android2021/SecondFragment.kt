@@ -13,6 +13,7 @@ class SecondFragment : Fragment() {
     private var backButton: Button? = null
     private var result: TextView? = null
 
+    // Создаем фрагмент, переопределив метод и используя inflater.inflate
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,6 +42,7 @@ class SecondFragment : Fragment() {
         return 0
     }
 
+    // Передаем данные во фрагмент
     companion object {
 
         @JvmStatic

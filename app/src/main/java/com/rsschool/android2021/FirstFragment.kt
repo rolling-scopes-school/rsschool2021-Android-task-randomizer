@@ -13,6 +13,7 @@ class FirstFragment : Fragment() {
     private var generateButton: Button? = null
     private var previousResult: TextView? = null
 
+    // Создаем фрагмент, переопределив метод и используя inflater.inflate
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
