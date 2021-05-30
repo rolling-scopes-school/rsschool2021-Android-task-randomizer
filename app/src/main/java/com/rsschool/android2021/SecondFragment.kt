@@ -40,7 +40,7 @@ class SecondFragment : Fragment() {
     }
 
     private fun generate(min: Int, max: Int): Int {
-        return Random.nextInt(min, max)
+        return (min..max).random()
     }
 
     interface OnBackButtonClick {
