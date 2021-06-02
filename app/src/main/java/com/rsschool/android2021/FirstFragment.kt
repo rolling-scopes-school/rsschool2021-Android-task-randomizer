@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 
@@ -12,6 +13,8 @@ class FirstFragment : Fragment() {
 
     private var generateButton: Button? = null
     private var previousResult: TextView? = null
+    private lateinit var minEditText: EditText
+    private lateinit var maxEditText: EditText
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,16 +28,37 @@ class FirstFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         previousResult = view.findViewById(R.id.previous_result)
         generateButton = view.findViewById(R.id.generate)
+        minEditText = view.findViewById(R.id.min_value)
+        maxEditText = view.findViewById(R.id.max_value)
 
         val result = arguments?.getInt(PREVIOUS_RESULT_KEY)
         previousResult?.text = "Previous result: ${result.toString()}"
 
-        // TODO: val min = ...
-        // TODO: val max = ...
-
         generateButton?.setOnClickListener {
-            // TODO: send min and max to the SecondFragment
+            val min = minEditText.text.toString()
+            val max = maxEditText.text.toString()
+
+            try {
+                var minNumber = min.toInt()
+                var maxNumber = max.toInt()
+
+                if (minNumber > maxNumber) {
+                    showError("The minimum number cannot be more than the maximum!")
+                    return@setOnClickListener
+                }
+
+                (requireActivity() as? MainActivity)?.openSecondFragment(minNumber, maxNumber)
+            } catch (nfe: NumberFormatException) {
+               showError("Please enter whole numbers!")
+            }
         }
+    }
+
+    private fun showError(str: String) {
+        val errorDialogFragment = ErrorDialogFragment()
+        errorDialogFragment.text = str
+        val manager = requireActivity().supportFragmentManager
+        errorDialogFragment.show(manager, "errorDialog")
     }
 
     companion object {
